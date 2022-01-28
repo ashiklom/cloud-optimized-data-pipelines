@@ -43,3 +43,9 @@ python3 ERA5/fetch.py
 # Generate the cog
 python3 run.py -f download.nc -c ERA5
 ```
+
+## IS2SITMOGR4
+
+```bash
+python -m handler --href IS2SITMOGR4_01_202104_004_001.nc --collection IS2SITMOGR4
+```
