@@ -19,8 +19,10 @@ export AWS_SECRET_ACCESS_KEY=XXX
 
 docker build -t cogify .
 # Runs an example in handler.py
-docker run --env EARTHDATA_USERNAME --env EARTHDATA_PASSWORD --build-arg AWS_ACCESS_KEY_ID --build-arg AWS_SECRET_ACCESS_KEY cogify python -m handler  --collection xxx --href xxx
-
+docker run --env EARTHDATA_USERNAME --env EARTHDATA_PASSWORD --env AWS_ACCESS_KEY_ID --env AWS_SECRET_ACCESS_KEY cogify python -m handler \
+--collection OMDOAO3e \
+--href https://acdisc.gesdisc.eosdis.nasa.gov/data//Aura_OMI_Level3/OMDOAO3e.003/2022/OMI-Aura_L3-OMDOAO3e_2022m0105_v003-2022m0107t023328.he5 \
+--upload
 ```
 
 ## Other supported collections
