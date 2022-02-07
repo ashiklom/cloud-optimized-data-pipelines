@@ -167,7 +167,7 @@ def to_cog(**config):
         dtype=variable.dtype,
         count=1,
         transform=dst_transform,
-        crs=src_crs,
+        crs=dst_crs,
         height=dst_height,
         width=dst_width,
         nodata=nodata_value,
