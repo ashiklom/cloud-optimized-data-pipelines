@@ -46,6 +46,10 @@ python3 run.py -f download.nc -c ERA5
 
 ## IS2SITMOGR4
 
+[ICESat-2 L4 Monthly Gridded Sea Ice Thickness, Version 1](https://nsidc.org/data/IS2SITMOGR4/versions/1)
+
 ```bash
-python -m handler --href IS2SITMOGR4_01_202104_004_001.nc --collection IS2SITMOGR4
+# Assumes you have ~/.netrc credentials
+curl -O https://n5eil01u.ecs.nsidc.org/ICESAT2_PO/IS2SITMOGR4.001/2021.03.01/IS2SITMOGR4_01_202103_004_001.nc
+python -m handler --href IS2SITMOGR4_01_202103_004_001.nc --collection IS2SITMOGR4
 ```

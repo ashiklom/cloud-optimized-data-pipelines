@@ -65,7 +65,8 @@ def upload_file(outfilename, collection):
 
 
 def download_file(file_uri: str):
-    filename = f"/tmp/{os.path.basename(file_uri)}"
+    #filename = f"/tmp/{os.path.basename(file_uri)}"
+    filename = f"{os.path.basename(file_uri)}"
     if "http" in file_uri:
         # This isn't working for GPMIMERG, need to use .netrc
         username = os.environ.get("EARTHDATA_USERNAME")
@@ -111,13 +112,22 @@ def to_cog(**config):
 
     # This implies a global spatial extent, which is not always the case
     src_height, src_width = variable.shape[0], variable.shape[1]
+
     if x_variable and y_variable:
         xmin = src[x_variable][:].min()
         xmax = src[x_variable][:].max()
         ymin = src[y_variable][:].min()
         ymax = src[y_variable][:].max()
+        # longmin = src['longitude'][:].min()
+        # longmax = src['longitude'][:].max()
+        # latmin = src['latitude'][:].min()
+        # latmax = src['latitude'][:].max()
+        # x_tg_resolution = (longmax - longmin) / float(src_width)
+        # y_tg_resolution = (latmax - latmin) / float(src_height)
     else:
         xmin, ymin, xmax, ymax = [-180, -90, 180, 90]
+    print(f"xmin {xmin} xmax {xmax} ymin {ymin} ymax {ymax}")
+    #print(f"{x_tg_resolution} {y_tg_resolution}")
 
     src_crs = config.get("src_crs")
     if src_crs:
@@ -137,7 +147,11 @@ def to_cog(**config):
         bottom=ymin,
         right=xmax,
         top=ymax,
+        # resolution=(x_tg_resolution, y_tg_resolution)
     )
+    print(f"calculate default transform dst_transform {dst_transform}")
+    print(f"dst_width {dst_width}")
+    print(f"dst_height {dst_height}")
 
     # https://github.com/NASA-IMPACT/cloud-optimized-data-pipelines/blob/rwegener2-envi-to-cog/docker/omno2-to-cog/OMNO2d.003/handler.py
     affine_transformation = config.get("affine_transformation")
@@ -154,8 +168,8 @@ def to_cog(**config):
         count=1,
         transform=dst_transform,
         crs=src_crs,
-        height=src_height,
-        width=src_width,
+        height=dst_height,
+        width=dst_width,
         nodata=nodata_value,
         tiled=True,
         compress="deflate",
