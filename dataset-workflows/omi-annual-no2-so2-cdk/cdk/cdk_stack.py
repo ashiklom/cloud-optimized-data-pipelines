@@ -17,7 +17,6 @@ class CdkStack(core.Stack):
         stack_name = construct_id
 
         bucket = "climatedashboard-data"
-        collection = "omi-annual-no2-so2"
 
         s3bucket = s3.Bucket.from_bucket_name(
             self, f"{id}-bucket", bucket_name=bucket
@@ -81,7 +80,7 @@ class CdkStack(core.Stack):
 
         generate_stac_item_lambda = aws_lambda.Function(
             self,
-            f"{id}-{collection}-generate-stac-item-fn",
+            f"{id}-{construct_id}-generate-stac-item-fn",
             code=aws_lambda.Code.from_asset_image(
                 directory="../../lambdas/stac-gen",
                 file="Dockerfile",
@@ -109,7 +108,7 @@ class CdkStack(core.Stack):
 
         db_write_lambda = aws_lambda.Function(
             self,
-            f"{id}-{collection}-write-db-fn",
+            f"{id}-{construct_id}-write-db-fn",
             role=db_write_role,
             code=aws_lambda.Code.from_asset_image(
                 directory="../../lambdas/db-write",
@@ -129,7 +128,7 @@ class CdkStack(core.Stack):
                 PGPASSWORD=os.environ["PGPASSWORD"],
             ),
             vpc=database_vpc,
-            vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PRIVATE),
+            vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.ISOLATED),
             security_groups=[lambda_function_security_group],
         )
 
@@ -166,5 +165,5 @@ class CdkStack(core.Stack):
         s3_wflow_definition = s3_start_state.next(s3_discover_task).next(map_stac_items)
 
         s3_wflow_state_machine = stepfunctions.StateMachine(
-            self, f"{bucket}-{collection}-COG-StateMachine", definition=s3_wflow_definition
+            self, f"{bucket}-{construct_id}-COG-StateMachine", definition=s3_wflow_definition
         )
